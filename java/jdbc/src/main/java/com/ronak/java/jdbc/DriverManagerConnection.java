@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 /**
  * Connecting database using DriverManager
  * 
@@ -12,23 +11,38 @@ import java.sql.SQLException;
  * jdbc:mysql://host,failoverhost:port/database?propertyName1=propertyValue1&
  * propertyName2=propertyValue2...
  * 
- * When starting a new connection, the driver always tries to connect to the
- * primary host first and, if required, fails over to the secondary hosts on the
- * list sequentially when communication problems are experienced.
+ * failover is the name of a standby database
  * 
  * @author Ronak
  *
  */
 public class DriverManagerConnection {
 
-	public static void main(String... args) {
+	public static void main(String... args) throws SQLException {
 
-		try {
-			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbcpractice", "root", "root");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbcronak", "root", "root");
+
+		String catalog = conn.getCatalog();
+		System.out.println(" Catalog : " + catalog);
+
+		// TRANSACTION_NONE 0
+		// TRANSACTION_READ_COMMITTED 2
+		// TRANSACTION_READ_UNCOMMITTED 1
+		// TRANSACTION_REPEATABLE_READ 4
+		// TRANSACTION_SERIALIZABLE 8
+		int transactionIsolation = conn.getTransactionIsolation();
+		System.out.println(" TransactionIsolation : " + transactionIsolation);
+
+		// ResultSet.HOLD_CURSORS_OVER_COMMIT 1
+		// ResultSet.CLOSE_CURSORS_AT_COMMIT 2
+		int holdability = conn.getHoldability();
+		System.out.println(" Holdability : " + holdability);
+
+		int networkTimeout = conn.getNetworkTimeout();
+		System.out.println(" networkTimeout : " + networkTimeout);
+
+		boolean autoCommit = conn.getAutoCommit();
+		System.out.println(" autoCommit : " + autoCommit);
 
 	}
 

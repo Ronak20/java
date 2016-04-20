@@ -1,0 +1,33 @@
+Look at SQLExceptionJDBC.java
+Overview of SQLException
+
+	When JDBC encounters an error during an interaction with a data source, it throws an instance of SQLException as opposed to 
+	Exception.
+	
+	The SQLException instance contains the following information that can help you determine the cause of the error:
+
+    A description of the error(SQLException.getMessage).
+
+    A SQLState code. These codes and their respective meanings have been standardized by ISO/ANSI and Open Group (X/Open), 
+    This String object consists of five alphanumeric characters(SQLException.getSQLState).
+
+    An error code. This is an integer value identifying the error that caused the SQLException instance to be thrown. Its 
+    value and meaning are implementation-specific and might be the actual error code returned by the underlying data source. 
+    Retrieve the error by calling the method SQLException.getErrorCode.
+
+    A cause. A SQLException instance might have a causal relationship, which consists of one or more Throwable objects that 
+    caused the SQLException instance to be thrown. To navigate this chain of causes, recursively call the method 
+    SQLException.getCause until a null value is returned.
+
+    A reference to any chained exceptions. If more than one error occurs, the exceptions are referenced through this chain. 
+    Retrieve these exceptions by calling the method SQLException.getNextException on the exception that was thrown.
+    
+Retrieving Warnings
+
+	SQLWarning objects are a subclass of SQLException that deal with database access warnings. Warnings do not stop the execution 
+	of an application, as exceptions do; they simply alert the user that something did not happen as planned.
+	
+	A warning can be reported on a Connection object, a Statement object (including PreparedStatement and CallableStatement objects), 
+	or a ResultSet object. Each of these classes has a getWarnings method, which you must invoke in order to see the first warning 
+	reported on the calling object. If getWarnings returns a warning, you can call the SQLWarning method getNextWarning on it to 
+	get any additional warnings.

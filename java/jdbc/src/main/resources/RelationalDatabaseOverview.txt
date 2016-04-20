@@ -1,0 +1,35 @@
+A Relational Database Overview
+
+	A relational database is one that presents information in tables with rows and columns. 
+	A table is referred to as a relation in the sense that it is a collection of objects of the same type (rows). 
+	Data in a table can be related according to common keys or concepts, and the ability to retrieve related data 
+	from a table is the basis for the term relational database. 
+	
+	A Database Management System (DBMS) handles the way data is stored, maintained, and retrieved. In the case of a 
+	relational database, a Relational Database Management System (RDBMS) performs these tasks.
+
+Result Sets and Cursors
+
+	The rows that satisfy the conditions of a query are called the result set. A cursor can be thought of as a pointer 
+	into a file that contains the rows of the result set.
+
+Transactions
+
+	When one user is accessing data in a database, another user may be accessing the same data at the same time.
+	It is possible for the second user to get partly old data and partly updated data. For this reason, DBMSs use transactions 
+	to maintain data in a consistent state (data consistency) while allowing more than one user to access a database 
+	at the same time (data concurrency).
+	
+	A transaction is a set of one or more SQL statements that make up a logical unit of work. A transaction ends with 
+	either a commit or a rollback.
+	
+	A lock is a mechanism that prohibits two transactions from manipulating the same data at the same time.
+
+
+Stored Procedures
+
+	A stored procedure is a group of SQL statements that can be called by name.
+	
+Metadata
+
+	Databases store user data, and they also store information about the database itself. 

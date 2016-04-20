@@ -1,0 +1,13 @@
+To process any SQL statement with JDBC, you follow these steps:
+
+1.	Establishing a connection.
+2.	Create a statement.
+3. 	Execute the query.
+4.	Process the ResultSet object.
+5.	Close the connection.
+
+1. 	Establishing a connection.
+
+	A JDBC application connects to a target data source using one of two classes.
+		DriverManager - DriverManagerConnection.java
+		DataSource - DataSourceConnection.java

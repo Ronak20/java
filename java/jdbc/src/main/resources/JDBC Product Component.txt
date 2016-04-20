@@ -1,0 +1,21 @@
+JDBC Product Components
+
+JDBC includes four components:
+
+1.	The JDBC API — The JDBC™ API provides programmatic access to relational data from the Java programming language.
+	The JDBC 4.0 API is divided into two packages: java.sql and javax.sql.
+	
+2.	JDBC Driver Manager — The JDBC DriverManager class defines objects which can connect Java applications to a 
+	JDBC driver. The Standard Extension packages javax.naming and javax.sql let you use a DataSource object 
+	registered with a Java Naming and Directory Interface(JNDI) naming service to establish a connection with 
+	a data source. 
+	
+3.	JDBC Test Suite — The JDBC driver test suite helps you to determine that JDBC drivers will run your program. 
+	These tests are not comprehensive or exhaustive, but they do exercise many of the important features in the JDBC API.
+
+4.	JDBC-ODBC Bridge — The Java Software bridge provides JDBC access via ODBC drivers. Note that you need to load ODBC 
+	binary code onto each client machine that uses this driver. As a result, the ODBC driver is most appropriate on a 
+	corporate network where client installations are not a major problem, or for application server code written in 
+	Java in a three-tier architecture.
+
+The last two components are used in specialized environments to test web applications, or to communicate with ODBC-aware DBMSs.
