@@ -1,0 +1,74 @@
+https://en.wikipedia.org/wiki/JDBC_driver
+
+A JDBC driver is a software component enabling a Java application to interact with a database.
+
+To connect with individual databases, JDBC (the Java Database Connectivity API) requires drivers for each database. 
+
+JDBC technology drivers fit into one of four categories.[2]
+
+	1. JDBC-ODBC bridge
+	2. Native-API driver
+	3. Network-Protocol driver (Middleware driver)
+	4. Database-Protocol driver (Pure Java driver)
+
+Type 1 driver – JDBC-ODBC bridge
+The JDBC type 1 driver, also known as the JDBC-ODBC bridge, is a database driver implementation that employs the 
+ODBC driver to connect to the database. The driver converts JDBC method calls into ODBC function calls.
+
+	Advantages
+	Almost any database for which an ODBC driver is installed can be accessed, and data can be retrieved.
+	
+	Disadvantages
+	Performance overhead since the calls have to go through the JDBC bridge to the ODBC driver, then to the 
+	native db connectivity interface (thus may be slower than other types of drivers). The ODBC driver needs 
+	to be installed on the client machine.
+	
+Type 2 driver – Native-API driver
+The JDBC type 2 driver, also known as the Native-API driver, is a database driver implementation 
+that uses the client-side libraries of the database. The driver converts JDBC method calls into 
+native calls of the database API. For example: Oracle OCI driver is a type 2 driver.
+
+	Advantages
+	As there is no implementation of JDBC-ODBC bridge, its considerably faster than a type 1 driver.
+	Disadvantages
+	The vendor client library needs to be installed on the client machine.
+	Not all databases have a client side library.
+	This driver is platform dependent.
+
+Type 3 driver – Network-Protocol driver (middleware driver)
+The JDBC type 3 driver, also known as the Pure Java driver for database middleware, is a database driver implementation 
+which makes use of a middle tier between the calling program and the database. The middle-tier (application server) 
+converts JDBC calls directly or indirectly into the vendor-specific database protocol.
+
+	Advantages
+	Since the communication between client and the middleware server is database independent, there is no need for the 
+	database vendor library on the client.
+	The middleware server (which can be a full-fledged J2EE Application server) can provide typical middleware services 
+	like caching (of connections, query results, etc.), load balancing, logging, and auditing.
+	A single driver can handle any database, provided the middleware supports it.
+	Disadvantages
+	Requires database-specific coding to be done in the middle tier.
+	The middleware layer added may result in additional latency, but is typically overcome by using better middleware services.
+
+Type 4 driver – Database-Protocol driver (Pure Java driver)
+The JDBC type 4 driver, also known as the Direct to Database Pure Java Driver, is a database driver implementation 
+that converts JDBC calls directly into a vendor-specific database protocol.
+
+Written completely in Java, type 4 drivers are thus platform independent. They install inside the Java Virtual Machine 
+of the client. This provides better performance than the type 1 and type 2 drivers as it does not have the overhead of 
+conversion of calls into ODBC or database API calls.
+
+	Advantages
+	Completely implemented in Java to achieve platform independence.
+	These drivers don't translate the requests into an intermediary format (such as ODBC).
+	The client application connects directly to the database server. No translation or middleware layers are used, 
+	improving performance.
+	The JVM can manage all aspects of the application-to-database connection; this can facilitate debugging.
+	Disadvantages
+	Drivers are database dependent, as different database vendors use widely different (and usually proprietary) 
+	network protocols.
+
+Open Database Connectivity
+Open Database Connectivity (ODBC) is a standard programming language middleware application programming interface (API) 
+for accessing database management systems (DBMS).  The designers of ODBC aimed to make it independent of database 
+systems and operating systems.
