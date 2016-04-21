@@ -1,0 +1,50 @@
+A transaction is a set of one or more statements that is executed as a unit, so either all of the statements are executed, 
+or none of the statements is executed.
+
+1. Disabling Auto-Commit Mode
+When a connection is created, it is in auto-commit mode. Default is for a SQL statement to be committed when it is completed, 
+not when it is executed.
+
+2. Committing Transactions
+After the auto-commit mode is disabled, no SQL statements are committed until you call the method commit explicitly. 
+
+3. Using Transactions to Preserve Data Integrity
+For protection against conflicts that arise when two users access data at the same time.
+A DBMS uses locks, mechanisms for blocking access by others to the data that is being accessed by the transaction.
+In auto-commit mode, where each statement is a transaction, locks are held for only one statement. After a lock is set, 
+it remains in force until the transaction is committed or rolled back.
+
+How locks are set is determined by what is called a transaction isolation level, which can range from not supporting 
+transactions at all to supporting transactions that enforce very strict access rules.
+
+Isolation Level 				Transactions 	Dirty Reads 	Non-Repeatable Reads 	Phantom Reads
+TRANSACTION_NONE 				Not supported 	Not applicable 	Not applicable 			Not applicable
+TRANSACTION_READ_COMMITTED 		Supported 		Prevented 		Allowed 				Allowed
+TRANSACTION_READ_UNCOMMITTED 	Supported 		Allowed 		Allowed 				Allowed
+TRANSACTION_REPEATABLE_READ 	Supported 		Prevented 		Prevented 				Allowed
+TRANSACTION_SERIALIZABLE 		Supported 		Prevented 		Prevented 				Prevented
+
+A non-repeatable read occurs when transaction A retrieves a row, transaction B subsequently updates the row, and transaction 
+A later retrieves the same row again. Transaction A retrieves the same row twice but sees different data.
+
+A phantom read occurs when transaction A retrieves a set of rows satisfying a given condition, transaction B subsequently 
+inserts or updates a row such that the row now meets the condition in transaction A, and transaction A later repeats the 
+conditional retrieval. Transaction A now sees an additional row. This row is referred to as a phantom.
+
+Connection.getTransactionIsolation to find isolation level.
+
+4. Setting and Rolling Back to Savepoints
+creating a Savepoint with the following statement:
+Savepoint save1 = con.setSavepoint();
+
+the method rolls back the transaction with the following statement:
+con.rollback(save1);
+
+5. Releasing Savepoints
+The method Connection.releaseSavepoint takes a Savepoint object as a parameter and removes it from the current transaction.
+
+6. When to Call Method rollback
+
+Calling the method rollback terminates a transaction and returns any values that were modified 
+to their previous values. If you are trying to execute one or more statements in a transaction and get a SQLException, 
+call the method rollback to end the transaction and start the transaction all over again.

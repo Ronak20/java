@@ -1,0 +1,72 @@
+ResultSet Interface
+	The ResultSet interface provides methods for retrieving and manipulating the results of executed queries.
+	
+	ResultSet object can be created through any object that implements the Statement interface, including PreparedStatement, 
+ 	CallableStatement, and RowSet.
+ 	
+ 	You access the data in a ResultSet object through a cursor. Note that this cursor is not a database cursor. 
+	This cursor is a pointer that points to one row of data in the ResultSet. Initially, the cursor is positioned 
+	before the first row. The method ResultSet.next moves the cursor to the next row.
+	
+ResultSet Types
+	The sensitivity of a ResultSet object is determined by one of three different ResultSet types:
+
+    1. TYPE_FORWARD_ONLY: The result set cannot be scrolled; its cursor moves forward only.
+    it contains the rows that satisfy the query at either the time the query is executed or as the rows are retrieved.
+    
+    2. TYPE_SCROLL_INSENSITIVE: The result can be scrolled; its cursor can move both forward and backward relative to the 
+    current position, and it can move to an absolute position. The result set is insensitive to changes made to the 
+    underlying data source while it is open.
+    
+    3. TYPE_SCROLL_SENSITIVE: TYPE_SCROLL_INSENSITIVE plus The result set reflects changes made to the underlying 
+    data source while the result set remains open.
+
+	The default ResultSet type is TYPE_FORWARD_ONLY.
+	
+	The method DatabaseMetaData.supportsResultSetType returns true if the specified ResultSet type is supported and false otherwise.
+	
+ResultSet Concurrency
+	There are two concurrency levels:
+
+    CONCUR_READ_ONLY: The ResultSet object cannot be updated using the ResultSet interface.
+    CONCUR_UPDATABLE: The ResultSet object can be updated using the ResultSet interface.
+	
+	DatabaseMetaData.supportsResultSetConcurrency to check support.
+	
+Cursor Holdability
+	The ResultSet property holdability gives the application control over whether ResultSet objects (cursors) are 
+	closed when commit is called.
+	
+	The following ResultSet constants may be supplied to the Connection methods createStatement, prepareStatement, and prepareCall:
+    1. HOLD_CURSORS_OVER_COMMIT: ResultSet cursors are not closed.
+    2. CLOSE_CURSORS_AT_COMMIT: ResultSet objects (cursors) are closed when the commit method is called.
+    
+Cursors
+you access the data in a ResultSet object through a cursor, which points to one row in the ResultSet object.
+
+ There are other methods available to move the cursor:
+
+    next: Moves the cursor forward one row. 
+    	Returns true if the cursor is now positioned on a row and false if the cursor is positioned after the last row.
+    previous: Moves the cursor backward one row. 
+    	Returns true if the cursor is now positioned on a row and false if the cursor is positioned before the first row.
+    first: Moves the cursor to the first row in the ResultSet object. 
+    	Returns true if the cursor is now positioned on the first row and false if the ResultSet object does not contain any rows.
+    last: Moves the cursor to the last row in the ResultSet object. 
+    	Returns true if the cursor is now positioned on the last row and false if the ResultSet object does not contain any rows.
+    beforeFirst: Positions the cursor at the start of the ResultSet object, before the first row. 
+    	If the ResultSet object does not contain any rows, this method has no effect.
+    afterLast: Positions the cursor at the end of the ResultSet object, after the last row. 
+    	If the ResultSet object does not contain any rows, this method has no effect.
+    relative(int rows): Moves the cursor relative to its current position.
+    absolute(int row): Positions the cursor on the row specified by the parameter row.
+
+    
+Using Statement Objects for Batch Updates
+	add SQL commands to this list with the method addBatch and empty it with the method clearBatch. Call the method executeBatch 
+	to send them all to the database to be executed as a unit, or batch.
+	
+	Handling Batch Update Exceptions
+	You will get a BatchUpdateException when you call the method executeBatch if 
+	(1) one of the SQL statements you added to the batch produces a result set (usually a query) or 
+	(2) one of the SQL statements in the batch does not execute successfully for some other reason.

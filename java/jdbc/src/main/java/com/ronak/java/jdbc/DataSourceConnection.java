@@ -1,6 +1,8 @@
 package com.ronak.java.jdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -8,7 +10,8 @@ import javax.sql.DataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 /**
- * DataSource objects can provide connection pooling and distributed transactions.
+ * DataSource objects can provide connection pooling and distributed
+ * transactions.
  * 
  * A JDBC driver should include at least a basic DataSource implementation.
  * 
@@ -55,6 +58,28 @@ public class DataSourceConnection {
 		boolean autoCommit = conn.getAutoCommit();
 		System.out.println(" autoCommit : " + autoCommit);
 
+		DatabaseMetaData dbMetaData = conn.getMetaData();
+		boolean isTypeForwardSupported = dbMetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
+		System.out.println(" isTypeForwardSupported : " + isTypeForwardSupported);
+		boolean isTypeScrollInsensitive = dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+		System.out.println(" isTypeScrollInsensitive : " + isTypeScrollInsensitive);
+		boolean isTypeScrollSensitive = dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE);
+		System.out.println(" isTypeScrollSensitive : " + isTypeScrollSensitive);
+
+		// since only TYPE_SCROLL_INSENSITIVE is supported we will use it to
+		// check concurrency
+		boolean isConcurReadOnly = dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY);
+		System.out.println(" isConcurReadOnly : " + isConcurReadOnly);
+		boolean isConcurReadUpdatable = dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_UPDATABLE);
+		System.out.println(" isConcurReadUpdatable : " + isConcurReadUpdatable);
+
+		boolean isHoldOverCommit = dbMetaData.supportsResultSetHoldability(ResultSet.HOLD_CURSORS_OVER_COMMIT);
+		System.out.println("Supports HOLD_CURSORS_OVER_COMMIT? " + isHoldOverCommit);
+
+		boolean isCloseOverCommit = dbMetaData.supportsResultSetHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+		System.out.println("Supports CLOSE_CURSORS_AT_COMMIT? " + isCloseOverCommit);
 	}
 
 }
