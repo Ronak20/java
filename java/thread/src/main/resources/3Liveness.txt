@@ -1,0 +1,14 @@
+Liveness
+A concurrent application's ability to execute in a timely manner is known as its liveness.
+Two other liveness problems, starvation and livelock.
+
+Deadlock
+Deadlock describes a situation where two or more threads are blocked forever, waiting for each other.
+
+Starvation and Livelock
+This happens when shared resources are made unavailable for long periods by "greedy" threads.
+
+Livelock
+A thread often acts in response to the action of another thread. If the other thread's action is also a response to the action of 
+another thread, then livelock may result.However, the threads are not blocked — they are simply too busy responding to each other 
+to resume work.

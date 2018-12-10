@@ -1,0 +1,22 @@
+Immutable Objects
+
+An object is considered immutable if its state cannot change after it is constructed.
+they cannot be corrupted by thread interference or observed in an inconsistent state.
+
+Programmers are often reluctant to employ immutable objects, because they worry about 
+the cost of creating a new object as opposed to updating an object in place.
+The impact of object creation is often overestimated, and can be offset by some of the efficiencies 
+associated with immutable objects. 
+These include decreased overhead due to garbage collection, and the elimination of code needed to 
+protect mutable objects from corruption.
+
+A Strategy for Defining Immutable Objects : 
+
+    Don't provide "setter" methods — methods that modify fields or objects referred to by fields.
+    Make all fields final and private.
+    Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the constructor private and construct instances in factory methods.
+    If the instance fields include references to mutable objects, don't allow those objects to be changed:
+        Don't provide methods that modify the mutable objects.
+        Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
+
+

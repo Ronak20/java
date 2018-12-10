@@ -1,0 +1,17 @@
+Guarded Block
+
+For coordinating actions use the guarded block. Such a block begins by polling a condition that must be true before the block 
+can proceed. 
+
+Always invoke wait inside a loop that tests for the condition being waited for. Don't assume that the interrupt was for the 
+particular condition you were waiting for, or that the condition is still true.
+
+When wait is invoked, the thread releases the lock and suspends execution. At some future time, another thread will acquire 
+the same lock and invoke Object.notifyAll, informing all threads waiting on that lock that something important has happened.
+
+Some time after the second thread has released the lock, the first thread reacquires the lock and resumes by returning from 
+the invocation of wait.
+
+There is a second notification method, notify, which wakes up a single thread. Because notify doesn't allow you to specify 
+the thread that is woken up, it is useful only in massively parallel applications — that is, programs with a large number of 
+threads, all doing similar chores. In such an application, you don't care which thread gets woken up. 
