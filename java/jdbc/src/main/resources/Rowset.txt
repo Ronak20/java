@@ -1,0 +1,66 @@
+RowSet Objects
+
+A JDBC RowSet object holds tabular data in a way that makes it more flexible and easier to use than a result set.
+Programmers are free to write their own versions of the javax.sql.RowSet interface.
+
+Following interfaces that extend RowSet interface:
+
+    JdbcRowSet
+    CachedRowSet
+    WebRowSet
+    JoinRowSet
+    
+What Can RowSet Objects Do?
+
+All RowSet objects are derived from the ResultSet interface and therefore share its capabilities. They add these new capabilities:
+
+	1. Function as JavaBeans Component
+		All RowSet objects are JavaBeans components. This means that they have the following:
+		    A. Properties :  Properties are exposed to builder tools (such as those that come with the IDEs JDveloper 
+		    and Eclipse) that enable you to visually manipulate beans. 
+		    
+		    B. JavaBeans Notification Mechanism : RowSet objects use the JavaBeans event model, in which registered components are 
+		    notified when certain events occur. For all RowSet objects, three events trigger notifications:
+
+			    A cursor movement
+			    The update, insertion, or deletion of a row
+			    A change to the entire RowSet contents		
+			    
+			    
+			The notification of an event goes to all listeners, components that have implemented the RowSetListener interface and 
+			have had themselves added to the RowSet object's list of components to be notified when any of the three events occurs.    
+		
+	
+    2. Add Scrollability or Updatability
+		If DBMSs or drivers do not support result sets that can be scrolled and can be updated (updatable), you can use a RowSet 
+		object to do it.
+		
+Kinds of RowSet Objects
+
+	 Connected Rowset : A connected RowSet object uses a JDBC driver to make a connection to a relational database and maintains that 
+	 connection throughout its life span.
+	 	* JdbcRowSet :  a JdbcRowSet object is most similar to a ResultSet object and is often used as a wrapper to make an otherwise 
+	 	non-scrollable and read-only ResultSet object scrollable and updatable.
+	 
+	 Disconnected Rowset : A disconnected RowSet object makes a connection to a data source only to read in data from a ResultSet 
+	 object or to write data back to the data source. Disconnected RowSet objects are also serializable.
+	 	* CachedRowSet : A CachedRowSet object has all the capabilities of a JdbcRowSet object plus it can also do the following:
+		    - Obtain a connection to a data source and execute a query
+		    - Read the data from the resulting ResultSet object and populate itself with that data
+		    - Manipulate data and make changes to data while it is disconnected
+		    - Reconnect to the data source to write changes back to it
+		    - Check for conflicts with the data source and resolve those conflicts
+
+		* WebRowSet : A WebRowSet object has all the capabilities of a CachedRowSet object plus it can also do the following:
+			- Write itself as an XML document
+		    - Read an XML document that describes a WebRowSet object
+
+		* JoinRowSet : A JoinRowSet object has all the capabilities of a WebRowSet object plus it can also do the following:
+		    - Form the equivalent of a SQL JOIN without having to connect to a data source
+
+		* FilteredRowSet : A FilteredRowSet object likewise has all the capabilities of a WebRowSet object plus it can also do the 
+		following:
+		    - Apply filtering criteria so that only selected data is visible. This is equivalent to executing a query on a 
+		    RowSet object without having to use a query language or connect to a data source.
+			 	
+	 

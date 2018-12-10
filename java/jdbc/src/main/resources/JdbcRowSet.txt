@@ -1,0 +1,34 @@
+Creating JdbcRowSet Objects
+
+You can create a JdbcRowSet object in various ways:
+check JdbcRowSetExample.java
+    constructor that takes a ResultSet object.The ResultSet object that is passed to the JdbcRowSetImpl constructor must be scrollable.
+    constructor that takes a Connection object
+    default constructor
+    By using an instance of RowSetFactory, which is created from the class RowSetProvider
+
+Default JdbcRowSet Objects
+
+When you create a JdbcRowSet object with the default constructor, the new JdbcRowSet object will have the following properties:
+
+    type: ResultSet.TYPE_SCROLL_INSENSITIVE (has a scrollable cursor)
+    concurrency: ResultSet.CONCUR_UPDATABLE (can be updated)
+    escapeProcessing: true (the driver will do escape processing; when escape processing is enabled, the driver will scan for 
+    any escape syntax and translate it into code that the particular database understands)
+    maxRows: 0 (no limit on the number of rows)
+    maxFieldSize: 0 (no limit on the number of bytes for a column value; applies only to columns that store BINARY, VARBINARY, 
+    LONGVARBINARY, CHAR, VARCHAR, and LONGVARCHAR values)
+    queryTimeout: 0 (has no time limit for how long it takes to execute a query)
+    showDeleted: false (deleted rows are not visible)
+    transactionIsolation: Connection.TRANSACTION_READ_COMMITTED (reads only data that has been committed)
+    typeMap: null (the type map associated with a Connection object used by this RowSet object is null)
+
+
+The execute method does many things for you in the background:
+
+    It makes a connection to the database using the values you assigned to the url, username, and password properties.
+    It executes the query you set in the command property.
+    It reads the data from the resulting ResultSet object into the jdbcRs object.
+    
+You navigate a JdbcRowSet object the same way you navigate a scrollable ResultSet object.Look at ResultSetJDBC.java
+    

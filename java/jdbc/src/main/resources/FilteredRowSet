@@ -1,0 +1,51 @@
+FilteredRowSet
+
+A FilteredRowSet object lets you cut down the number of rows that are visible in a RowSet object.
+The query's WHERE clause defines the filtering criteria.A FilteredRowSet object provides a way for 
+a disconnected RowSet object to do this filtering without having to execute a query on the data 
+source, thus avoiding having to get a connection to the data source and sending queries to it.
+
+	Ability to limit the rows that are visible according to set criteria
+    Ability to select which data is visible without being connected to a data source
+	
+
+Defining Filtering Criteria in Predicate Objects
+	To set the criteria for which rows in a FilteredRowSet object will be visible, you define a class that implements the 
+	Predicate interface.
+	
+	An object created with this class is initialized with the following:
+    The high end of the range within which values must fall
+    The low end of the range within which values must fall
+    The column name or column number of the column with the value that must fall within the range of values set by the high and 
+    low boundaries
+	
+
+Creating FilteredRowSet Objects
+	use an instance of RowSetFactory
+	Using constructor
+
+Creating and Setting Predicate Objects
+	frs.setFilter(myStateFilter);
+
+	To do the actual filtering, you call the method next, which in the reference implementation calls the appropriate version 
+	of the Predicate.evaluate method that you have implemented previously.
+
+	If the return value is true, the row will be visible; if the return value is false, the row will not be visible.
+
+Setting FilteredRowSet Objects with New Predicate Objects to Filter Data Further
+	After calling the method next on each row, which makes visible only those rows that satisfy the filter, you can call 
+	setFilter again, passing it a different Predicate object. Even though only one filter is set at a time, the effect is 
+	that both filters apply cumulatively.
+
+Updating FilteredRowSet Objects
+	You can insert a new row or change one or more values in an existing row if the new value or values are within the 
+	filtering criteria.
+
+Inserting or Updating Rows
+	If a row to be inserted does not meet the cumulative filtering criteria in effect, it will be blocked from being added.
+
+Removing All Filters so All Rows Are Visible
+	frs.setFilter(null);
+
+Deleting Rows
+	Delete the row as long as the row is visible.

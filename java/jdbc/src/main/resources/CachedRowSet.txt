@@ -1,0 +1,125 @@
+CachedRowSet
+
+It is a disconnected RowSet object. It gets its name from the fact that it stores (caches) its data in memory so that it 
+can operate on its own data rather than on the data stored in a database.
+
+When the RowSetReader object for a disconnected RowSet object is implemented to read data from different data sources then it 
+can read data from data source reading logic it implements.
+
+The following topics are covered:
+
+    1. Setting Up CachedRowSet Objects
+    	* Setting up a CachedRowSet object involves the following:
+		    - Creating CachedRowSet Objects
+		    	Using the Default Constructor
+		    	The object crs has the same default values for its properties that a JdbcRowSet object has 
+		    	when it is first created. In addition, it has been assigned an instance of the default SyncProvider 
+		    	implementation, RIOptimisticProvider.
+
+				A SyncProvider object supplies a RowSetReader object (a reader) and a RowSetWriter object (a writer), 
+				which a disconnected RowSet object needs in order to read data from its data source or to write data 
+				back to its data source.
+		    	
+				Using an instance of RowSetFactory
+		    - Setting CachedRowSet Properties
+		    	username: The name a user supplies to a database as part of gaining access
+			    password: The user's database password
+			    url: The JDBC URL for the database to which the user wants to connect
+			    datasourceName: The name used to retrieve a DataSource object that has been 
+			    registered with a JNDI naming service
+		    	
+		    - Setting Key Columns
+		    	If you are going make any updates to the crs object and want those updates saved in the database, you must 
+		    	set one more piece of information: the key columns. Key columns are essentially the same as a primary key 
+		    	because they indicate one or more columns that uniquely identify a row. The difference is that a primary key 
+		    	is set on a table in the database, whereas key columns are set on a particular RowSet object.
+    	
+    2. Populating CachedRowSet Objects
+    	crs.execute();
+
+		The data in crs is the data in the ResultSet object produced by executing the query in the command property.
+    
+    3. What Reader Does
+    	 A newly created CachedRowSet object is not connected to a data source and therefore must obtain a connection to 
+    	 that data source in order to get data from it. The reference implementation of the default SyncProvider object 
+    	 (RIOptimisticProvider) provides a reader that obtains a connection by using the values set for the user name, 
+    	 password, and either the JDBC URL or the data source name, whichever was set more recently. Then the reader 
+    	 executes the query set for the command. It reads the data in the ResultSet object produced by the query, populating 
+    	 the CachedRowSet object with that data. Finally, the reader closes the connection.
+    
+    4. Updating CachedRowSet Objects
+    	Updating Column Values,inserting and deleting in a CachedRowSet object is just the same as updating data in a JdbcRowSet 
+    	object.
+    
+    5. Updating Data Sources
+    	The methods updateRow, insertRow, and deleteRow can update both the JdbcRowSet object and the data source. In the case of 
+    	a disconnected RowSet object, however, these methods update the data stored in the CachedRowSet object's memory but cannot 
+    	affect the data source. A disconnected RowSet object must call the method acceptChanges in order to save its changes to the 
+    	data source.
+    	
+    		crs.acceptChanges();
+    
+    6. What Writer Does
+    	Whereas the method execute delegates its work to the RowSet object's reader, the method acceptChanges delegates its 
+    	tasks to the RowSet object's writer. In the background, the writer opens a connection to the database, updates the 
+    	database with the changes made to the RowSet object, and then closes the connection.
+    	
+    		* Using Default Implementation
+			The difficulty is that a conflict can arise. A conflict is a situation in which another party has updated a value in 
+			the database that corresponds to a value that was updated in a RowSet object. Which value should persist in the database?
+			What the writer does when there is a conflict depends on how it is implemented, and there are many possibilities. At one 
+			end of the spectrum, the writer does not even check for conflicts and just writes all changes to the database. This is 
+			the case with the RIXMLProvider implementation, which is used by a WebRowSet object. At the other end, the writer ensures 
+			that there are no conflicts by setting database locks that prevent others from making changes.
+			
+			The RIOPtimisticProvider implementation gets its name from the fact that it uses an optimistic concurrency model. 
+			This model assumes that there will be few, if any, conflicts and therefore sets no database locks. The writer checks 
+			to see if there are any conflicts, and if there is none, it writes the changes made to the crs object to the database, 
+			and those changes become persistent. If there are any conflicts, the default is not to write the new RowSet values to 
+			the database.
+			
+			* Using SyncResolver Objects
+			When the writer has finished looking for conflicts and has found one or more, it creates a SyncResolver object containing 
+			the database values that caused the conflicts. Next, the method acceptChanges throws a SyncProviderException object, which 
+			an application may catch and use to retrieve the SyncResolver object. The following lines of code retrieve the SyncResolver object resolver:
+
+				try {
+				    crs.acceptChanges();
+				} catch (SyncProviderException spe) {
+				    SyncResolver resolver = spe.getSyncResolver();
+				}
+
+			The object resolver is a RowSet object that replicates the crs object except that it contains only the values in the 
+			database that caused a conflict. All other column values are null.
+
+			With the resolver object, you can iterate through its rows to locate the values that are not null and are therefore 
+			values that caused a conflict. Then you can locate the value at the same position in the crs object and compare them. 
+			The following code fragment retrieves resolver and uses the SyncResolver method nextConflict to iterate through the 
+			rows that have conflicting values. The object resolver gets the status of each conflicting value, and if it is 
+			UPDATE_ROW_CONFLICT, meaning that the crs was attempting an update when the conflict occurred, the resolver object 
+			gets the row number of that value. Then the code moves the cursor for the crs object to the same row. Next, the code 
+			finds the column in that row of the resolver object that contains a conflicting value, which will be a value that is 
+			not null. After retrieving the value in that column from both the resolver and crs objects, you can compare the two 
+			and decide which one you want to become persistent. Finally, the code sets that value in both the crs object and the 
+			database using the method setResolvedValue, as shown in the following code:
+			
+    7. Notifying Listeners
+    	* Setting Up Listeners
+		A listener for a RowSet object is a component that implements the following methods from the RowSetListener interface:
+		    cursorMoved: Defines what the listener will do, if anything, when the cursor in the RowSet object moves.
+		    rowChanged: Defines what the listener will do, if anything, when one or more column values in a row have changed, a row 
+		    	has been inserted, or a row has been deleted.
+		    rowSetChanged: Defines what the listener will do, if anything, when the RowSet object has been populated with new data.
+		    
+		    Adding listener:
+				crs.addRowSetListener(bar);
+			
+			Removing a listener:
+				crs.removeRowSetListener(bar);
+				
+				
+		* How Notification Works
+			In the reference implementation, methods that cause any of the RowSet events automatically notify all registered listeners.
+		    
+
+    8. Sending Large Amounts of Data

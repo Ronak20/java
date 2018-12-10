@@ -1,0 +1,21 @@
+JoinRowSet
+
+A JoinRowSet implementation lets you create a SQL JOIN between RowSet objects when they are not connected to a data source.
+
+Creating JoinRowSet Objects
+	JoinRowSet jrs = new JoinRowSetImpl();
+	The variable jrs holds nothing until RowSet objects are added to it.
+
+Adding RowSet Objects
+	Any RowSet object can be added to a JoinRowSet object as long as it can be part of a SQL JOIN.
+
+Managing Match Columns
+	The column on which the JOIN is based, is called the match column.
+	
+	The first way is to pass the match column to the JoinRowSet method addRowSet, as shown in the following line of code:
+		jrs.addRowSet(coffees, 2);
+		jrs.addRowSet(suppliers, 1);
+		jrs.addRowSet(coffees, "SUP_ID");
+		
+Currently the only type that is implemented is JoinRowSet.INNER_JOIN.
+	
