@@ -9,9 +9,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -39,7 +44,20 @@ public class AutUtil {
 
 	private static String GECKO_DRIVER = "E://Onedrive/java/java/selenium/src/test/resources/geckodriver-v0.23.0-win64/geckodriver.exe";
 
+	private static String CHROME_DRIVER = "E://Onedrive/java/java/selenium/src/test/resources/chromedriver.exe";
+
+	public static WebDriver getChromeDriver() {
+		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER);
+		System.setProperty("webdriver.chrome.verboseLogging", "true");
+		System.setProperty("webdriver.chrome.logfile",
+				"E://Onedrive/java/java/selenium/src/test/resources/chromedriver.log");
+		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		return driver;
+	}
+
 	public static WebDriver getFirefoxDriver() {
+
 		System.setProperty("webdriver.gecko.driver", GECKO_DRIVER);
 		WebDriver driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
